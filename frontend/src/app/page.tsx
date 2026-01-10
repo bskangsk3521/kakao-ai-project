@@ -1,15 +1,19 @@
+//사용자가 상호작용하는 파일이라고 브라우저에게 명시하는 코드
 "use client";
 
+// react라이브러리에서 useState라는 Hook을 가져오는 코드
 import { useState } from "react";
 
-// 대화 내역 하나하나의 모양을 정의합니다.
+// Message의 속성과 타입을 정함.
 interface Message {
   role: "user" | "ai";
   text: string;
 }
 
+//외부 파일에서 이 함수를 사용할 수 있게 선언, 외부에 import할 때 Home()함수가 이 파일의 메인 함수임을 선언
 export default function Home() {
   const [input, setInput] = useState("");
+  //messages 배열의 구조를 Message 인터페이스로 지정
   const [messages, setMessages] = useState<Message[]>([]); // 대화 내역 저장용 배열
   const [isLoading, setIsLoading] = useState(false);
 
