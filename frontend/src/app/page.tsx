@@ -22,19 +22,25 @@ export default function Home() {
 
     // 1. 내가 보낸 메시지를 화면에 추가
     const userMsg: Message = { role: "user", text: input };
+    //react에서 화면을 다시 그리기 위해 messages안 배열을 완전히 새로운 배열도 덮어씌우기 위한 작업, ...을 사용해 기존 배열의 요소를 그대로 복사하고 새로운 요소를 추가가
     setMessages((prev) => [...prev, userMsg]);
-    setInput(""); // 입력창 비우기
+    //입력창을 비워 사용자가 정상적으로 메세지가 보낸진 것을 인식하게 함
+    setInput(""); 
     setIsLoading(true);
-
+    
+    //네트워크 통신은 언제나 실패할 수 있으니 예외 처리를 해야함 
     try {
-      // 2. 백엔드에 질문 던지기
+      /* fetch() 브라우저에 내장된 HTTP함수 /  ?user_input= 쿼리 스트링(HTTP규칙) 보내줄 데이터를 표시, encodeURIComponent()특수문자를 인터넷 주소 규칙에 맞게 변환
+      `${}` 템플릿 리터럴 문자열 사이에 변수를 편하게 집어 넣기 위해(javascript 문법) */
       const res = await fetch(`http://127.0.0.1:8000/chat?user_input=${encodeURIComponent(input)}`);
+      //.json() 서버가 보낸 res객체에 담겨있는 json형식의 데이터를 js 객체로 변환해 data에 저장
       const data = await res.json();
 
       // 3. AI 답변을 화면에 추가
       const aiMsg: Message = { role: "ai", text: data.ai_answer };
       setMessages((prev) => [...prev, aiMsg]);
     } catch (error) {
+      //에러를 콘솔창에 출력
       console.error("Error:", error);
       const errorMsg: Message = { role: "ai", text: "죄송해요, 서버와 연결에 실패했어요. 😢" };
       setMessages((prev) => [...prev, errorMsg]);
